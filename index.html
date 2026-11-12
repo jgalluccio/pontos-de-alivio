@@ -93,14 +93,11 @@ th{color:var(--muted);font-weight:700;font-size:.8rem;text-transform:uppercase;l
 .up{color:var(--alert);font-weight:700}
 .small{font-size:.88rem;color:var(--muted)}
 .fig{margin:0;display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--bg);border-radius:12px;padding:14px}
-.fig svg{width:100%;max-width:270px;height:auto}
+.fig svg{width:100%;max-width:340px;height:auto;border-radius:12px;background:#fff}
 .fig figcaption{font-weight:700;text-align:center}
-.fig .o{fill:var(--skin);stroke:var(--ink);stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}
-.fig .g{fill:none;stroke:var(--muted);stroke-width:1.6;stroke-dasharray:5 5;stroke-linecap:round}
-.fig .l{fill:none;stroke:var(--ink);stroke-width:1.8;stroke-linecap:round}
-.fig text{font-family:var(--font-body);font-size:13px;fill:var(--muted)}
-.fig .pt{fill:var(--point);stroke:var(--surface);stroke-width:2}
-.fig .halo{fill:none;stroke:var(--point);stroke-width:2.5;opacity:.45}
+.fig text{font-family:var(--font-body);font-size:27px;font-weight:700;fill:#33504a;paint-order:stroke;stroke:#fff;stroke-width:6px;stroke-linejoin:round}
+.fig .pt{fill:#d2401a;stroke:#fff;stroke-width:4}
+.fig .halo{fill:none;stroke:#d2401a;stroke-width:5;opacity:.5}
 [hidden]{display:none!important}
 .linkbtn{background:none;border:0;color:var(--accent);text-decoration:underline;padding:8px 0;font-weight:700;align-self:flex-start}
 </style>
@@ -167,7 +164,7 @@ th{color:var(--muted);font-weight:700;font-size:.8rem;text-transform:uppercase;l
   <h2 id="point-name"></h2>
   <p class="code" id="point-code"></p>
   <div class="card">
-    <figure class="fig"><div id="point-fig"></div><figcaption id="point-figcap"></figcaption><span class="small">Desenho esquemático. O ponto certo costuma ser o mais sensível ao toque nessa área.</span></figure>
+    <figure class="fig"><div id="point-fig"></div><figcaption id="point-figcap"></figcaption><span class="small">Ilustração de referência. O ponto certo costuma ser o mais sensível ao toque nessa área.</span></figure>
     <dl>
       <div><dt>Onde fica</dt><dd id="point-where"></dd></div>
       <div><dt>Qual lado</dt><dd>Teste o ponto nos dois lados do corpo e fique no mais sensível. Na dúvida, comece pelo lado oposto ao da dor.</dd></div>
@@ -209,57 +206,57 @@ th{color:var(--muted);font-weight:700;font-size:.8rem;text-transform:uppercase;l
 <script>
 
 var BASES = {
-  mao:{cap:"Dorso da mão",svg:'<path class="l" d="M88 318 L88 250 M152 318 L152 250"/><rect class="o" x="-13" y="-72" width="26" height="84" rx="13" transform="translate(64,206) rotate(-38)"/><rect class="o" x="66" y="50" width="24" height="110" rx="12"/><rect class="o" x="94" y="30" width="24" height="130" rx="12"/><rect class="o" x="122" y="45" width="24" height="115" rx="12"/><rect class="o" x="150" y="80" width="22" height="80" rx="11"/><rect class="o" x="60" y="140" width="120" height="115" rx="24"/><path class="g" d="M78 152 L100 245 M106 152 L113 245 M134 152 L127 245 M161 152 L142 245"/><path class="l" d="M70 150 q8 -7 16 0 M98 150 q8 -7 16 0 M126 150 q8 -7 16 0 M153 150 q8 -7 16 0"/><text x="4" y="128">polegar</text><text x="178" y="76">mindinho</text><text x="120" y="290" text-anchor="middle">punho</text>'},
-  pernaFrente:{cap:"Perna vista de frente",svg:'<path class="o" d="M104 262 C90 275 86 300 120 304 C154 300 150 275 136 262"/><path class="o" d="M82 10 C80 40 78 60 80 85 C70 110 70 140 82 180 C90 215 100 240 104 262 L136 262 C140 240 150 215 158 180 C170 140 170 110 160 85 C162 60 160 40 158 10"/><ellipse class="g" cx="120" cy="62" rx="20" ry="18"/><path class="g" d="M120 88 L120 258 M84 174 L156 174"/><text x="170" y="66">joelho</text><text x="150" y="268">tornozelo</text><text x="168" y="178">metade</text><text x="66" y="150" text-anchor="end">lado</text><text x="66" y="166" text-anchor="end">de fora</text><text x="114" y="124" text-anchor="end">canela</text>'},
-  pernaLado:{cap:"Perna vista de lado, por fora",svg:'<path class="o" d="M150 10 C156 40 160 60 152 85 C150 140 142 200 134 250 C134 262 140 272 160 280 L205 288 C216 290 216 304 204 304 L96 304 C82 304 80 290 88 272 C92 262 96 255 96 245 C80 215 52 170 62 120 C66 100 76 85 80 70 C82 50 80 30 80 10"/><path class="g" d="M102 103 L117 257"/><circle class="l" cx="118" cy="266" r="9"/><circle class="l" cx="100" cy="96" r="7"/><text x="162" y="62">joelho</text><text x="62" y="84" text-anchor="end">ossinho</text><text x="146" y="262">tornozelo</text><text x="60" y="262" text-anchor="end">tendão</text>'},
-  bracoFrente:{cap:"Braço visto de frente, palma para cima",svg:'<path class="o" d="M86 10 C82 60 82 110 84 140 C80 165 86 220 98 285 L142 285 C154 220 160 165 156 140 C158 110 158 60 154 10"/><path class="l" d="M86 146 L154 146"/><path class="g" d="M120 118 L120 162"/><text x="162" y="150">dobra</text><text x="126" y="114">tendão</text><text x="76" y="270" text-anchor="end">lado do</text><text x="76" y="286" text-anchor="end">polegar</text><text x="120" y="308" text-anchor="middle">punho</text>'},
-  antebracoFora:{cap:"Antebraço, lado das costas da mão",svg:'<rect class="o" x="-11" y="-40" width="22" height="50" rx="11" transform="translate(98,278) rotate(-40)"/><rect class="o" x="94" y="246" width="52" height="60" rx="16"/><path class="o" d="M84 20 C78 60 86 180 100 250 L140 250 C154 180 162 60 156 20"/><path class="l" d="M84 30 L98 30"/><text x="164" y="34">cotovelo</text><text x="150" y="256">punho</text><text x="64" y="238" text-anchor="end">polegar</text>'},
-  antebracoDentro:{cap:"Antebraço, lado da palma",svg:'<rect class="o" x="-11" y="-40" width="22" height="50" rx="11" transform="translate(142,278) rotate(40)"/><rect class="o" x="94" y="246" width="52" height="60" rx="16"/><path class="o" d="M84 20 C78 60 86 180 100 250 L140 250 C154 180 162 60 156 20"/><path class="l" d="M101 250 L139 250"/><path class="g" d="M113 170 L115 248 M127 170 L125 248"/><text x="76" y="34" text-anchor="end">cotovelo</text><text x="88" y="256" text-anchor="end">punho</text><text x="176" y="238">polegar</text><text x="108" y="164" text-anchor="end">tendões</text>'},
-  ombro:{cap:"Ombro visto de lado",svg:'<path class="o" d="M70 318 L70 120 C70 60 100 34 120 34 C140 34 170 60 170 120 L170 318"/><path class="g" d="M72 110 C90 150 105 180 120 196 C135 180 150 150 168 110"/><path class="l" d="M112 34 L128 34"/><text x="120" y="22" text-anchor="middle">ponta do ombro</text><text x="120" y="290" text-anchor="middle">braço</text>'}
+  mao:{cap:"Dorso da mão",img:"vista1",lab:'<text x="80" y="110" text-anchor="middle">mindinho</text><text x="470" y="250" text-anchor="middle">polegar</text>'},
+  pernaFrente:{cap:"Perna vista de frente",img:"vista2",lab:'<text x="385" y="195">joelho</text><text x="365" y="418">lado de fora</text><text x="365" y="585">tornozelo</text>'},
+  pernaLado:{cap:"Perna vista de lado, por fora",img:"vista3",lab:'<text x="135" y="200" text-anchor="end">ossinho</text><text x="285" y="640">tornozelo</text><text x="145" y="640" text-anchor="end">tendão</text>'},
+  bracoFrente:{cap:"Braço visto de frente, palma para cima",img:"vista4",lab:'<text x="382" y="232">dobra do</text><text x="382" y="262">cotovelo</text><text x="430" y="600">polegar</text>'},
+  antebracoFora:{cap:"Antebraço, lado das costas da mão",img:"vista5",lab:'<text x="160" y="130" text-anchor="end">cotovelo</text><text x="205" y="480" text-anchor="end">punho</text><text x="420" y="600">polegar</text>'},
+  antebracoDentro:{cap:"Antebraço, lado da palma",img:"vista6",lab:'<text x="205" y="478" text-anchor="end">punho</text><text x="425" y="585">polegar</text>'},
+  ombro:{cap:"Ombro visto de lado",img:"vista7",lab:'<text x="200" y="55" text-anchor="end">ponta do ombro</text>'}
 };
 function figSvg(f){
-  var b=BASES[f.b], dots=f.p.map(function(c){return '<circle class="halo" cx="'+c[0]+'" cy="'+c[1]+'" r="14"/><circle class="pt" cx="'+c[0]+'" cy="'+c[1]+'" r="7.5"/>'}).join("");
-  return '<svg viewBox="0 0 240 320" role="img" aria-label="'+(f.cap||b.cap)+'">'+b.svg+dots+'</svg>';
+  var b=BASES[f.b], dots=f.p.map(function(c){return '<circle class="halo" cx="'+c[0]+'" cy="'+c[1]+'" r="25"/><circle class="pt" cx="'+c[0]+'" cy="'+c[1]+'" r="12"/>'}).join("");
+  return '<svg viewBox="0 0 600 800" role="img" aria-label="'+(f.cap||b.cap)+'"><image href="img/'+b.img+'.jpg" width="600" height="800"/>'+b.lab+dots+'</svg>';
 }
 var HOUXI = {
-  name:"Ponto da lateral da mão", code:"Houxi, ID3", fig:{b:"mao",p:[[181,172]],cap:"Lateral da mão, do lado do mindinho"},
+  name:"Ponto da lateral da mão", code:"Houxi, ID3", fig:{b:"mao",p:[[133,392]],cap:"Lateral da mão, do lado do mindinho"},
   where:"Feche a mão sem apertar. Na lateral, do lado do mindinho, forma-se uma dobra de pele logo abaixo da junta do mindinho. O ponto fica na ponta dessa dobra, encostado no osso."
 };
 var REGIONS = [
   {id:"ombro", label:"Ombro", hint:"dor ao levantar o braço",
    move:"Levante o braço dolorido devagar, até onde der, e faça círculos pequenos com o ombro.",
    points:[
-    {name:"Ponto do meio da canela", code:"Tiaokou, E38", fig:{b:"pernaFrente",p:[[107,174]]}, where:"Na frente da perna, na metade do caminho entre o joelho e o tornozelo, um dedo de largura para fora da borda da canela.", note:"É o ponto distante mais usado na tradição para ombro travado."},
-    {name:"Ponto entre anelar e mindinho", code:"Zhongzhu, TA3", fig:{b:"mao",p:[[145,172]]}, where:"No dorso da mão, na valeta entre os ossos do dedo anelar e do mindinho, logo atrás das juntas dos dedos."},
-    {name:"Ponto abaixo do joelho, por fora", code:"Yanglingquan, VB34", fig:{b:"pernaLado",p:[[111,108]]}, where:"Na face de fora da perna, logo abaixo do joelho. Ache o ossinho redondo e saliente (cabeça da fíbula). O ponto fica na pequena cova logo à frente e abaixo dele."}
+    {name:"Ponto do meio da canela", code:"Tiaokou, E38", fig:{b:"pernaFrente",p:[[323,409]]}, where:"Na frente da perna, na metade do caminho entre o joelho e o tornozelo, um dedo de largura para fora da borda da canela.", note:"É o ponto distante mais usado na tradição para ombro travado."},
+    {name:"Ponto entre anelar e mindinho", code:"Zhongzhu, TA3", fig:{b:"mao",p:[[207,395]]}, where:"No dorso da mão, na valeta entre os ossos do dedo anelar e do mindinho, logo atrás das juntas dos dedos."},
+    {name:"Ponto abaixo do joelho, por fora", code:"Yanglingquan, VB34", fig:{b:"pernaLado",p:[[243,232]]}, where:"Na face de fora da perna, logo abaixo do joelho. Ache o ossinho redondo e saliente (cabeça da fíbula). O ponto fica na pequena cova logo à frente e abaixo dele."}
    ]},
   {id:"joelho", label:"Joelho", hint:"dor ao andar, subir escada",
    move:"Sentado, dobre e estique o joelho dolorido devagar.",
    points:[
-    {name:"Ponto da ponta da dobra do cotovelo", code:"Quchi, IG11", fig:{b:"bracoFrente",p:[[89,146]]}, where:"Dobre o cotovelo. O ponto fica na ponta de fora da dobra, onde a prega da pele termina.", note:"Na acupuntura distal, o cotovelo corresponde ao joelho."},
-    {name:"Ponto ao lado do tendão do cotovelo", code:"Chize, P5", fig:{b:"bracoFrente",p:[[110,146]]}, where:"Com o cotovelo levemente dobrado, sinta o tendão duro no meio da dobra (bíceps). O ponto fica na própria dobra, encostado nesse tendão, do lado do polegar."},
-    {name:"Ponto do centro do ombro", code:"Jianzhong, escola Tung", fig:{b:"ombro",p:[[120,112]]}, where:"No centro do músculo arredondado do ombro (deltoide), de três a quatro dedos de largura abaixo da ponta do ombro."}
+    {name:"Ponto da ponta da dobra do cotovelo", code:"Quchi, IG11", fig:{b:"bracoFrente",p:[[340,238]]}, where:"Dobre o cotovelo. O ponto fica na ponta de fora da dobra, onde a prega da pele termina.", note:"Na acupuntura distal, o cotovelo corresponde ao joelho."},
+    {name:"Ponto ao lado do tendão do cotovelo", code:"Chize, P5", fig:{b:"bracoFrente",p:[[301,235]]}, where:"Com o cotovelo levemente dobrado, sinta o tendão duro no meio da dobra (bíceps). O ponto fica na própria dobra, encostado nesse tendão, do lado do polegar."},
+    {name:"Ponto do centro do ombro", code:"Jianzhong, escola Tung", fig:{b:"ombro",p:[[276,193]]}, where:"No centro do músculo arredondado do ombro (deltoide), de três a quatro dedos de largura abaixo da ponta do ombro."}
    ]},
   {id:"lombar", label:"Lombar", hint:"dor na parte baixa das costas",
    move:"Em pé, incline o tronco devagar para a frente e para os lados, ou caminhe pela casa.",
    points:[
-    {name:"Pontos da lombar na mão (são dois)", code:"Yaotongdian", fig:{b:"mao",p:[[104,228],[137,228]]}, where:"No dorso da mão. Um fica na valeta entre os ossos do indicador e do dedo médio. O outro, na valeta entre os ossos do anelar e do mindinho. Deslize o dedo pela valeta em direção ao punho até ela fechar, onde os ossos se encontram.", note:"Pressione um e depois o outro, metade do tempo em cada."},
+    {name:"Pontos da lombar na mão (são dois)", code:"Yaotongdian", fig:{b:"mao",p:[[301,514],[221,514]]}, where:"No dorso da mão. Um fica na valeta entre os ossos do indicador e do dedo médio. O outro, na valeta entre os ossos do anelar e do mindinho. Deslize o dedo pela valeta em direção ao punho até ela fechar, onde os ossos se encontram.", note:"Pressione um e depois o outro, metade do tempo em cada."},
     HOUXI,
-    {name:"Ponto atrás do tornozelo", code:"Kunlun, B60", fig:{b:"pernaLado",p:[[100,268]]}, where:"Atrás do tornozelo, do lado de fora, na cova entre o osso saliente do tornozelo e o tendão de Aquiles.", note:"Este ponto não deve ser usado na gravidez."}
+    {name:"Ponto atrás do tornozelo", code:"Kunlun, B60", fig:{b:"pernaLado",p:[[176,677]]}, where:"Atrás do tornozelo, do lado de fora, na cova entre o osso saliente do tornozelo e o tendão de Aquiles.", note:"Este ponto não deve ser usado na gravidez."}
    ]},
   {id:"pernas", label:"Pernas", hint:"dor ou peso nas panturrilhas",
    move:"Sentado, mexa os pés para cima e para baixo, como quem pisa em um pedal.",
    points:[
-    {name:"Ponto do músculo do antebraço", code:"Shousanli, IG10", fig:{b:"antebracoFora",p:[[91,70]]}, where:"Dobre o cotovelo e ache a ponta de fora da dobra. O ponto fica três dedos de largura abaixo dela, em direção ao polegar, sobre um músculo que costuma ser bem sensível.", note:"Na acupuntura distal, o antebraço corresponde à perna."},
-    {name:"Ponto de fora do punho", code:"Waiguan, TA5", fig:{b:"antebracoFora",p:[[120,212]]}, where:"No dorso do antebraço, três dedos de largura acima da dobra do punho, bem no meio, entre os dois ossos."},
-    {name:"Ponto de dentro do punho", code:"Neiguan, PC6", fig:{b:"antebracoDentro",p:[[120,212]]}, where:"Na parte de dentro do antebraço, três dedos de largura acima da dobra do punho, no meio, entre os dois tendões."}
+    {name:"Ponto do músculo do antebraço", code:"Shousanli, IG10", fig:{b:"antebracoFora",p:[[307,188]]}, where:"Dobre o cotovelo e ache a ponta de fora da dobra. O ponto fica três dedos de largura abaixo dela, em direção ao polegar, sobre um músculo que costuma ser bem sensível.", note:"Na acupuntura distal, o antebraço corresponde à perna."},
+    {name:"Ponto de fora do punho", code:"Waiguan, TA5", fig:{b:"antebracoFora",p:[[276,412]]}, where:"No dorso do antebraço, três dedos de largura acima da dobra do punho, bem no meio, entre os dois ossos."},
+    {name:"Ponto de dentro do punho", code:"Neiguan, PC6", fig:{b:"antebracoDentro",p:[[275,414]]}, where:"Na parte de dentro do antebraço, três dedos de largura acima da dobra do punho, no meio, entre os dois tendões."}
    ]},
   {id:"pescoco", label:"Pescoço", hint:"rigidez, dor ao virar a cabeça",
    move:"Vire a cabeça devagar para um lado e para o outro, sem forçar.",
    points:[
-    {name:"Ponto do torcicolo", code:"Luozhen", fig:{b:"mao",p:[[95,172]]}, where:"No dorso da mão, na valeta entre os ossos do dedo indicador e do dedo médio, um dedo de largura atrás das juntas dos dedos."},
+    {name:"Ponto do torcicolo", code:"Luozhen", fig:{b:"mao",p:[[323,381]]}, where:"No dorso da mão, na valeta entre os ossos do dedo indicador e do dedo médio, um dedo de largura atrás das juntas dos dedos."},
     HOUXI,
-    {name:"Ponto acima do tornozelo, por fora", code:"Xuanzhong, VB39", fig:{b:"pernaLado",p:[[116,214]]}, where:"Na face de fora da perna, quatro dedos de largura acima do osso saliente do tornozelo, na borda da frente do osso fino da perna."}
+    {name:"Ponto acima do tornozelo, por fora", code:"Xuanzhong, VB39", fig:{b:"pernaLado",p:[[218,580]]}, where:"Na face de fora da perna, quatro dedos de largura acima do osso saliente do tornozelo, na borda da frente do osso fino da perna."}
    ]}
 ];
 
