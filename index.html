@@ -66,7 +66,7 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-off
 .region:hover{border-color:var(--accent)}
 .region strong{font-family:var(--font-display);font-size:1.25rem}
 .region span{color:var(--muted);font-size:.9rem}
-ul{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:8px}
+ul,ol{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:8px}
 .alertbox{background:var(--alert-soft);border-left:6px solid var(--alert);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:10px}
 .alertbox h2,.alertbox h3{color:var(--alert)}
 .note{background:var(--accent-soft);border-radius:10px;padding:14px 16px;font-size:.95rem}
@@ -112,7 +112,17 @@ th{color:var(--muted);font-weight:700;font-size:.8rem;text-transform:uppercase;l
 <section id="v-home" class="stack">
   <p class="eyebrow">Acupressão em pontos distantes da dor</p>
   <h1>Pontos de Alívio</h1>
-  <p class="lead">Escolha onde dói. Você recebe três pontos para pressionar com o dedo, longe do local da dor, e anota quanto a dor mudou.</p>
+  <div class="card">
+    <h3>O que é isto</h3>
+    <p>Os pontos deste guia vêm da acupuntura clássica e das escolas de acupuntura distal, que tratam a dor pressionando lugares do corpo longe de onde dói. A indicação é tradicional e os estudos sobre acupressão feita pela própria pessoa ainda são pequenos. Por isso o guia tem um diário: é ele que mostra se funciona para você.</p>
+    <h3>Como usar</h3>
+    <ol>
+      <li>Escolha abaixo onde dói.</li>
+      <li>Dê uma nota de 0 a 10 para a dor.</li>
+      <li>Pressione os três pontos indicados, um minuto e meio cada, seguindo o desenho.</li>
+      <li>Dê a nota de novo. O diário guarda a diferença.</li>
+    </ol>
+  </div>
 
   <h2>Onde dói hoje?</h2>
   <div class="regions" id="regions"></div>
@@ -139,7 +149,6 @@ th{color:var(--muted);font-weight:700;font-size:.8rem;text-transform:uppercase;l
     <p class="small">O diário fica guardado só neste aparelho e neste navegador.</p>
   </div>
 
-  <p class="small">Os pontos vêm da acupuntura clássica e das escolas de acupuntura distal. A indicação é tradicional e os estudos sobre acupressão feita pela própria pessoa ainda são pequenos. Use o diário para descobrir se funciona para você.</p>
 </section>
 
 <!-- TRIAGEM -->
