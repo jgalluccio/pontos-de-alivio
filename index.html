@@ -130,7 +130,6 @@ th{color:var(--muted);font-weight:700;font-size:.8rem;text-transform:uppercase;l
   <div class="card">
     <h3>Antes de usar</h3>
     <ul>
-      <li>É um cuidado complementar. Não substitui consulta, exame nem remédio receitado.</li>
       <li>Não pressione sobre feridas, varizes, manchas roxas ou pele inflamada.</li>
       <li>Grávidas não devem usar este guia sem orientação: alguns pontos são contraindicados na gestação.</li>
       <li>Quem toma anticoagulante deve usar pressão leve, porque a pele marca com facilidade.</li>
@@ -151,29 +150,6 @@ th{color:var(--muted);font-weight:700;font-size:.8rem;text-transform:uppercase;l
 
 </section>
 
-<!-- TRIAGEM -->
-<section id="v-triage" class="stack" hidden>
-  <button class="linkbtn" data-go="home">Voltar</button>
-  <p class="eyebrow" id="triage-region"></p>
-  <h2>Primeiro, uma checagem rápida</h2>
-  <p>Algum destes sinais vale para você hoje? Respondendo que não, esta checagem só volta a aparecer daqui a 30 dias.</p>
-  <div class="card"><ul id="triage-list"></ul></div>
-  <div class="row">
-    <button class="btn" id="triage-no">Não, nenhum deles</button>
-    <button class="btn ghost" id="triage-yes">Sim, pelo menos um</button>
-  </div>
-</section>
-
-<!-- PARAR -->
-<section id="v-stop" class="stack" hidden>
-  <div class="alertbox">
-    <h2>Hoje, o caminho é o médico</h2>
-    <p>Esses sinais pedem avaliação de um profissional de saúde antes de qualquer técnica em casa. Pressionar pontos pode mascarar um problema que precisa de tratamento.</p>
-    <p><strong>Dor no peito, falta de ar, perda de força súbita ou perda de controle da urina são emergência: ligue 192 (SAMU).</strong></p>
-  </div>
-  <button class="btn ghost" data-go="home">Voltar ao início</button>
-</section>
-
 <!-- DOR ANTES -->
 <section id="v-before" class="stack" hidden>
   <button class="linkbtn" data-go="home">Voltar</button>
@@ -182,7 +158,6 @@ th{color:var(--muted);font-weight:700;font-size:.8rem;text-transform:uppercase;l
   <div class="scale" id="scale-before"></div>
   <div class="scale-legend"><span>0 = sem dor</span><span>10 = a pior dor</span></div>
   <button class="btn" id="before-next" disabled>Ver os pontos</button>
-  <button class="linkbtn" id="before-flags">Rever os sinais de alerta</button>
 </section>
 
 <!-- SESSÃO -->
@@ -246,13 +221,6 @@ function figSvg(f){
   var b=BASES[f.b], dots=f.p.map(function(c){return '<circle class="halo" cx="'+c[0]+'" cy="'+c[1]+'" r="14"/><circle class="pt" cx="'+c[0]+'" cy="'+c[1]+'" r="7.5"/>'}).join("");
   return '<svg viewBox="0 0 240 320" role="img" aria-label="'+(f.cap||b.cap)+'">'+b.svg+dots+'</svg>';
 }
-var GENERAL_FLAGS = [
-  "A dor começou há poucos dias, depois de uma queda ou batida",
-  "Febre junto com a dor",
-  "Perda de peso sem explicação nos últimos meses",
-  "Dor que acorda à noite e não melhora em nenhuma posição",
-  "Dormência, formigamento ou fraqueza que apareceram agora"
-];
 var HOUXI = {
   name:"Ponto da lateral da mão", code:"Houxi, ID3", fig:{b:"mao",p:[[181,172]],cap:"Lateral da mão, do lado do mindinho"},
   where:"Feche a mão sem apertar. Na lateral, do lado do mindinho, forma-se uma dobra de pele logo abaixo da junta do mindinho. O ponto fica na ponta dessa dobra, encostado no osso."
@@ -260,7 +228,6 @@ var HOUXI = {
 var REGIONS = [
   {id:"ombro", label:"Ombro", hint:"dor ao levantar o braço",
    move:"Levante o braço dolorido devagar, até onde der, e faça círculos pequenos com o ombro.",
-   flags:["Dor no ombro ou braço esquerdo com aperto no peito, suor frio ou falta de ar","Ombro inchado, quente ou deformado","Não consegue levantar o braço de jeito nenhum depois de uma queda"],
    points:[
     {name:"Ponto do meio da canela", code:"Tiaokou, E38", fig:{b:"pernaFrente",p:[[107,174]]}, where:"Na frente da perna, na metade do caminho entre o joelho e o tornozelo, um dedo de largura para fora da borda da canela.", note:"É o ponto distante mais usado na tradição para ombro travado."},
     {name:"Ponto entre anelar e mindinho", code:"Zhongzhu, TA3", fig:{b:"mao",p:[[145,172]]}, where:"No dorso da mão, na valeta entre os ossos do dedo anelar e do mindinho, logo atrás das juntas dos dedos."},
@@ -268,7 +235,6 @@ var REGIONS = [
    ]},
   {id:"joelho", label:"Joelho", hint:"dor ao andar, subir escada",
    move:"Sentado, dobre e estique o joelho dolorido devagar.",
-   flags:["Joelho inchado, quente ou vermelho","Joelho que trava ou falseia e faz você quase cair","Não consegue apoiar o peso na perna"],
    points:[
     {name:"Ponto da ponta da dobra do cotovelo", code:"Quchi, IG11", fig:{b:"bracoFrente",p:[[89,146]]}, where:"Dobre o cotovelo. O ponto fica na ponta de fora da dobra, onde a prega da pele termina.", note:"Na acupuntura distal, o cotovelo corresponde ao joelho."},
     {name:"Ponto ao lado do tendão do cotovelo", code:"Chize, P5", fig:{b:"bracoFrente",p:[[110,146]]}, where:"Com o cotovelo levemente dobrado, sinta o tendão duro no meio da dobra (bíceps). O ponto fica na própria dobra, encostado nesse tendão, do lado do polegar."},
@@ -276,7 +242,6 @@ var REGIONS = [
    ]},
   {id:"lombar", label:"Lombar", hint:"dor na parte baixa das costas",
    move:"Em pé, incline o tronco devagar para a frente e para os lados, ou caminhe pela casa.",
-   flags:["Perda de controle da urina ou das fezes","Dormência entre as pernas, na região que encosta no selim","Fraqueza em uma ou nas duas pernas","Dor que desce abaixo do joelho com formigamento forte"],
    points:[
     {name:"Pontos da lombar na mão (são dois)", code:"Yaotongdian", fig:{b:"mao",p:[[104,228],[137,228]]}, where:"No dorso da mão. Um fica na valeta entre os ossos do indicador e do dedo médio. O outro, na valeta entre os ossos do anelar e do mindinho. Deslize o dedo pela valeta em direção ao punho até ela fechar, onde os ossos se encontram.", note:"Pressione um e depois o outro, metade do tempo em cada."},
     HOUXI,
@@ -284,7 +249,6 @@ var REGIONS = [
    ]},
   {id:"pernas", label:"Pernas", hint:"dor ou peso nas panturrilhas",
    move:"Sentado, mexa os pés para cima e para baixo, como quem pisa em um pedal.",
-   flags:["Uma perna só inchada, quente ou avermelhada","Dor na panturrilha que aparece ao caminhar e some ao parar","Ferida na perna ou no pé que não cicatriza","Pé frio, pálido ou arroxeado"],
    points:[
     {name:"Ponto do músculo do antebraço", code:"Shousanli, IG10", fig:{b:"antebracoFora",p:[[91,70]]}, where:"Dobre o cotovelo e ache a ponta de fora da dobra. O ponto fica três dedos de largura abaixo dela, em direção ao polegar, sobre um músculo que costuma ser bem sensível.", note:"Na acupuntura distal, o antebraço corresponde à perna."},
     {name:"Ponto de fora do punho", code:"Waiguan, TA5", fig:{b:"antebracoFora",p:[[120,212]]}, where:"No dorso do antebraço, três dedos de largura acima da dobra do punho, bem no meio, entre os dois ossos."},
@@ -292,7 +256,6 @@ var REGIONS = [
    ]},
   {id:"pescoco", label:"Pescoço", hint:"rigidez, dor ao virar a cabeça",
    move:"Vire a cabeça devagar para um lado e para o outro, sem forçar.",
-   flags:["Dor de cabeça muito forte que começou de repente","Tontura, visão dupla ou dificuldade para falar","Fraqueza ou dormência nos braços ou nas mãos"],
    points:[
     {name:"Ponto do torcicolo", code:"Luozhen", fig:{b:"mao",p:[[95,172]]}, where:"No dorso da mão, na valeta entre os ossos do dedo indicador e do dedo médio, um dedo de largura atrás das juntas dos dedos."},
     HOUXI,
@@ -308,7 +271,7 @@ function loadDiary(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(
 function saveDiary(d){try{localStorage.setItem(KEY,JSON.stringify(d));return true}catch(e){return false}}
 
 function show(view){
-  ["home","triage","stop","before","session","after","result"].forEach(function(v){$("v-"+v).hidden = v!==view});
+  ["home","before","session","after","result"].forEach(function(v){$("v-"+v).hidden = v!==view});
   stopTimer();
   if(view==="home") renderDiary();
   window.scrollTo(0,0);
@@ -328,15 +291,8 @@ function renderRegions(){
 
 function startRegion(r){
   state.region=r; state.before=null; state.after=null; state.idx=0;
-  $("triage-region").textContent=r.label;
-  var ul=$("triage-list"); ul.innerHTML="";
-  r.flags.concat(GENERAL_FLAGS).forEach(function(f){var li=document.createElement("li");li.textContent=f;ul.appendChild(li)});
-  if(triageOk(r.id)) goBefore(); else show("triage");
+  goBefore();
 }
-var TKEY="pontos-alivio-checagem";
-function loadTriage(){try{return JSON.parse(localStorage.getItem(TKEY))||{}}catch(e){return {}}}
-function triageOk(id){var t=loadTriage()[id];return !!t && (Date.now()-t)<30*24*3600*1000}
-function markTriage(id){var t=loadTriage();t[id]=Date.now();try{localStorage.setItem(TKEY,JSON.stringify(t))}catch(e){}}
 function goBefore(){
   $("before-region").textContent=state.region.label;
   $("before-next").disabled=true;
@@ -410,15 +366,12 @@ function finish(){
   var ok=saveDiary(d);
   if(b<a){$("result-title").textContent="A dor caiu de "+a+" para "+b;$("result-text").textContent="Anote mentalmente qual ponto e qual lado deram mais resultado. É por eles que vale começar na próxima vez."}
   else if(b===a){$("result-title").textContent="Desta vez a dor ficou em "+a;$("result-text").textContent="Acontece. Na próxima sessão, experimente o outro lado do corpo ou outro horário do dia."}
-  else{$("result-title").textContent="A dor subiu de "+a+" para "+b;$("result-text").textContent="Não repita hoje. Se a dor continuar mais forte nas próximas horas, ou se isso se repetir, fale com um profissional de saúde."}
+  else{$("result-title").textContent="A dor subiu de "+a+" para "+b;$("result-text").textContent="Não repita hoje. Na próxima vez, use menos pressão ou experimente outro ponto."}
   if(!ok)$("result-text").textContent+=" (Não foi possível guardar no diário neste navegador.)";
   show("result");
 }
 
 document.addEventListener("click",function(e){var t=e.target.closest("[data-go]");if(t)show(t.getAttribute("data-go"))});
-$("triage-yes").addEventListener("click",function(){show("stop")});
-$("triage-no").addEventListener("click",function(){markTriage(state.region.id);goBefore()});
-$("before-flags").addEventListener("click",function(){show("triage")});
 $("before-next").addEventListener("click",function(){show("session");renderPoint()});
 $("timer-btn").addEventListener("click",toggleTimer);
 $("point-prev").addEventListener("click",function(){if(state.idx>0){state.idx--;renderPoint()}});
