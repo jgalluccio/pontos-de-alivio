@@ -156,7 +156,7 @@ th{color:var(--muted);font-weight:700;font-size:.8rem;text-transform:uppercase;l
   <button class="linkbtn" data-go="home">Voltar</button>
   <p class="eyebrow" id="triage-region"></p>
   <h2>Primeiro, uma checagem rápida</h2>
-  <p>Algum destes sinais vale para você hoje?</p>
+  <p>Algum destes sinais vale para você hoje? Respondendo que não, esta checagem só volta a aparecer daqui a 30 dias.</p>
   <div class="card"><ul id="triage-list"></ul></div>
   <div class="row">
     <button class="btn" id="triage-no">Não, nenhum deles</button>
@@ -182,6 +182,7 @@ th{color:var(--muted);font-weight:700;font-size:.8rem;text-transform:uppercase;l
   <div class="scale" id="scale-before"></div>
   <div class="scale-legend"><span>0 = sem dor</span><span>10 = a pior dor</span></div>
   <button class="btn" id="before-next" disabled>Ver os pontos</button>
+  <button class="linkbtn" id="before-flags">Rever os sinais de alerta</button>
 </section>
 
 <!-- SESSÃO -->
@@ -330,7 +331,17 @@ function startRegion(r){
   $("triage-region").textContent=r.label;
   var ul=$("triage-list"); ul.innerHTML="";
   r.flags.concat(GENERAL_FLAGS).forEach(function(f){var li=document.createElement("li");li.textContent=f;ul.appendChild(li)});
-  show("triage");
+  if(triageOk(r.id)) goBefore(); else show("triage");
+}
+var TKEY="pontos-alivio-checagem";
+function loadTriage(){try{return JSON.parse(localStorage.getItem(TKEY))||{}}catch(e){return {}}}
+function triageOk(id){var t=loadTriage()[id];return !!t && (Date.now()-t)<30*24*3600*1000}
+function markTriage(id){var t=loadTriage();t[id]=Date.now();try{localStorage.setItem(TKEY,JSON.stringify(t))}catch(e){}}
+function goBefore(){
+  $("before-region").textContent=state.region.label;
+  $("before-next").disabled=true;
+  buildScale("scale-before",function(n){state.before=n;$("before-next").disabled=false});
+  show("before");
 }
 
 function buildScale(id, onPick){
@@ -406,12 +417,8 @@ function finish(){
 
 document.addEventListener("click",function(e){var t=e.target.closest("[data-go]");if(t)show(t.getAttribute("data-go"))});
 $("triage-yes").addEventListener("click",function(){show("stop")});
-$("triage-no").addEventListener("click",function(){
-  $("before-region").textContent=state.region.label;
-  $("before-next").disabled=true;
-  buildScale("scale-before",function(n){state.before=n;$("before-next").disabled=false});
-  show("before");
-});
+$("triage-no").addEventListener("click",function(){markTriage(state.region.id);goBefore()});
+$("before-flags").addEventListener("click",function(){show("triage")});
 $("before-next").addEventListener("click",function(){show("session");renderPoint()});
 $("timer-btn").addEventListener("click",toggleTimer);
 $("point-prev").addEventListener("click",function(){if(state.idx>0){state.idx--;renderPoint()}});
