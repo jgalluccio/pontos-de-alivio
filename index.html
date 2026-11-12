@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pontos de Alívio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap" rel="stylesheet">
+<style>
+/* Layout: uma coluna larga e calma, um passo por tela, botões grandes para mãos e olhos de 70+ */
+:root{
+  --bg:#eef3f1;
+  --surface:#ffffff;
+  --ink:#12302b;
+  --muted:#4a635d;
+  --line:#c9d8d3;
+  --accent:#0e6b5c;
+  --on-accent:#ffffff;
+  --accent-soft:#d9ece7;
+  --alert:#a3261c;
+  --alert-soft:#fbe6e3;
+  --good:#1d6b34;
+  --font-display:"Bricolage Grotesque","Trebuchet MS",Verdana,sans-serif;
+  --font-body:"Atkinson Hyperlegible",Verdana,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e1917;--surface:#172522;--ink:#e7f1ee;--muted:#a8bfb9;--line:#2f4741;
+    --accent:#63d2ba;--on-accent:#06231d;--accent-soft:#1d3a34;
+    --alert:#ff9c8f;--alert-soft:#3a1c18;--good:#7fdc98;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e1917;--surface:#172522;--ink:#e7f1ee;--muted:#a8bfb9;--line:#2f4741;
+  --accent:#63d2ba;--on-accent:#06231d;--accent-soft:#1d3a34;
+  --alert:#ff9c8f;--alert-soft:#3a1c18;--good:#7fdc98;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{font-size:19px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);line-height:1.55}
+main{max-width:720px;margin:0 auto;padding:28px 18px 64px;display:flex;flex-direction:column;gap:22px}
+h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:2.1rem;font-weight:800;letter-spacing:-.01em}
+h2{font-size:1.45rem;font-weight:800}
+h3{font-size:1.15rem;font-weight:600}
+p{margin:0}
+.lead{font-size:1.1rem;color:var(--muted);max-width:60ch}
+.stack{display:flex;flex-direction:column;gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.eyebrow{font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.btn{background:var(--accent);color:var(--on-accent);border:0;border-radius:12px;padding:16px 22px;font-weight:700;font-size:1.05rem;min-height:58px}
+.btn.ghost{background:transparent;color:var(--accent);border:2px solid var(--accent)}
+.btn.danger{background:var(--alert);color:var(--surface)}
+.row{display:flex;flex-wrap:wrap;gap:12px}
+.row .btn{flex:1 1 200px}
+.regions{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.region{background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:18px;text-align:left;display:flex;flex-direction:column;gap:4px;min-height:92px}
+.region:hover{border-color:var(--accent)}
+.region strong{font-family:var(--font-display);font-size:1.25rem}
+.region span{color:var(--muted);font-size:.9rem}
+ul{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:8px}
+.alertbox{background:var(--alert-soft);border-left:6px solid var(--alert);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:10px}
+.alertbox h2,.alertbox h3{color:var(--alert)}
+.note{background:var(--accent-soft);border-radius:10px;padding:14px 16px;font-size:.95rem}
+.scale{display:grid;grid-template-columns:repeat(11,1fr);gap:6px}
+.scale button{background:var(--surface);border:2px solid var(--line);border-radius:10px;min-height:54px;font-weight:700;font-size:1.05rem;font-variant-numeric:tabular-nums;padding:0}
+.scale button[aria-pressed="true"]{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.scale-legend{display:flex;justify-content:space-between;color:var(--muted);font-size:.85rem}
+@media (max-width:520px){.scale{grid-template-columns:repeat(6,1fr)}}
+.steps{display:flex;gap:8px}
+.steps i{flex:1;height:8px;border-radius:4px;background:var(--line)}
+.steps i.on{background:var(--accent)}
+.timer{font-family:var(--font-display);font-weight:800;font-size:3.4rem;font-variant-numeric:tabular-nums;line-height:1}
+.timerrow{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+dl{margin:0;display:flex;flex-direction:column;gap:10px}
+dt{font-weight:700}
+dd{margin:0;color:var(--ink)}
+.code{color:var(--muted);font-size:.9rem}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);font-size:.95rem}
+th{color:var(--muted);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.06em}
+.tablewrap{overflow-x:auto}
+.down{color:var(--good);font-weight:700}
+.same{color:var(--muted);font-weight:700}
+.up{color:var(--alert);font-weight:700}
+.small{font-size:.88rem;color:var(--muted)}
+[hidden]{display:none!important}
+.linkbtn{background:none;border:0;color:var(--accent);text-decoration:underline;padding:8px 0;font-weight:700;align-self:flex-start}
+</style>
+</head>
+<body>
+<main>
+
+<!-- INÍCIO -->
+<section id="v-home" class="stack">
+  <p class="eyebrow">Acupressão em pontos distantes da dor</p>
+  <h1>Pontos de Alívio</h1>
+  <p class="lead">Escolha onde dói. Você recebe três pontos para pressionar com o dedo, longe do local da dor, e anota quanto a dor mudou.</p>
+
+  <h2>Onde dói hoje?</h2>
+  <div class="regions" id="regions"></div>
+
+  <div class="card">
+    <h3>Antes de usar</h3>
+    <ul>
+      <li>É um cuidado complementar. Não substitui consulta, exame nem remédio receitado.</li>
+      <li>Não pressione sobre feridas, varizes, manchas roxas ou pele inflamada.</li>
+      <li>Grávidas não devem usar este guia sem orientação: alguns pontos são contraindicados na gestação.</li>
+      <li>Quem toma anticoagulante deve usar pressão leve, porque a pele marca com facilidade.</li>
+      <li>Se a dor piorar, formigar ou irradiar durante a pressão, pare.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Diário de dor</h3>
+    <div id="diary-summary" class="small"></div>
+    <div class="tablewrap"><table id="diary-table" hidden>
+      <thead><tr><th>Dia</th><th>Região</th><th>Antes</th><th>Depois</th><th>Mudança</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+    <button class="linkbtn" id="diary-clear" hidden>Apagar o diário</button>
+    <p class="small">O diário fica guardado só neste aparelho e neste navegador.</p>
+  </div>
+
+  <p class="small">Os pontos vêm da acupuntura clássica e das escolas de acupuntura distal. A indicação é tradicional e os estudos sobre acupressão feita pela própria pessoa ainda são pequenos. Use o diário para descobrir se funciona para você.</p>
+</section>
+
+<!-- TRIAGEM -->
+<section id="v-triage" class="stack" hidden>
+  <button class="linkbtn" data-go="home">Voltar</button>
+  <p class="eyebrow" id="triage-region"></p>
+  <h2>Primeiro, uma checagem rápida</h2>
+  <p>Algum destes sinais vale para você hoje?</p>
+  <div class="card"><ul id="triage-list"></ul></div>
+  <div class="row">
+    <button class="btn" id="triage-no">Não, nenhum deles</button>
+    <button class="btn ghost" id="triage-yes">Sim, pelo menos um</button>
+  </div>
+</section>
+
+<!-- PARAR -->
+<section id="v-stop" class="stack" hidden>
+  <div class="alertbox">
+    <h2>Hoje, o caminho é o médico</h2>
+    <p>Esses sinais pedem avaliação de um profissional de saúde antes de qualquer técnica em casa. Pressionar pontos pode mascarar um problema que precisa de tratamento.</p>
+    <p><strong>Dor no peito, falta de ar, perda de força súbita ou perda de controle da urina são emergência: ligue 192 (SAMU).</strong></p>
+  </div>
+  <button class="btn ghost" data-go="home">Voltar ao início</button>
+</section>
+
+<!-- DOR ANTES -->
+<section id="v-before" class="stack" hidden>
+  <button class="linkbtn" data-go="home">Voltar</button>
+  <p class="eyebrow" id="before-region"></p>
+  <h2>Quanto dói agora?</h2>
+  <div class="scale" id="scale-before"></div>
+  <div class="scale-legend"><span>0 = sem dor</span><span>10 = a pior dor</span></div>
+  <button class="btn" id="before-next" disabled>Ver os pontos</button>
+</section>
+
+<!-- SESSÃO -->
+<section id="v-session" class="stack" hidden>
+  <div class="steps" id="steps"></div>
+  <p class="eyebrow" id="point-count"></p>
+  <h2 id="point-name"></h2>
+  <p class="code" id="point-code"></p>
+  <div class="card">
+    <dl>
+      <div><dt>Onde fica</dt><dd id="point-where"></dd></div>
+      <div><dt>Qual lado</dt><dd>Teste o ponto nos dois lados do corpo e fique no mais sensível. Na dúvida, comece pelo lado oposto ao da dor.</dd></div>
+      <div><dt>Como pressionar</dt><dd>Com a ponta do polegar, pressão firme e círculos pequenos. A sensação certa é um dolorido suportável, nunca uma dor aguda. Respire devagar.</dd></div>
+      <div><dt>Enquanto pressiona</dt><dd id="point-move"></dd></div>
+    </dl>
+    <div class="note" id="point-note" hidden></div>
+  </div>
+  <div class="card">
+    <div class="timerrow">
+      <div class="timer" id="timer" aria-live="off">1:30</div>
+      <button class="btn" id="timer-btn">Começar 1 min e meio</button>
+    </div>
+  </div>
+  <div class="row">
+    <button class="btn ghost" id="point-prev">Ponto anterior</button>
+    <button class="btn" id="point-next">Próximo ponto</button>
+  </div>
+</section>
+
+<!-- DOR DEPOIS -->
+<section id="v-after" class="stack" hidden>
+  <h2>E agora, quanto dói?</h2>
+  <p class="lead">Mexa a região devagar antes de responder.</p>
+  <div class="scale" id="scale-after"></div>
+  <div class="scale-legend"><span>0 = sem dor</span><span>10 = a pior dor</span></div>
+  <button class="btn" id="after-save" disabled>Guardar no diário</button>
+</section>
+
+<!-- RESULTADO -->
+<section id="v-result" class="stack" hidden>
+  <h2 id="result-title"></h2>
+  <p class="lead" id="result-text"></p>
+  <div class="note">Uma ou duas sessões por dia bastam. Dê uma semana de uso antes de decidir se vale a pena para essa dor.</div>
+  <button class="btn" data-go="home">Voltar ao início</button>
+</section>
+
+</main>
+<script>
+var GENERAL_FLAGS = [
+  "A dor começou há poucos dias, depois de uma queda ou batida",
+  "Febre junto com a dor",
+  "Perda de peso sem explicação nos últimos meses",
+  "Dor que acorda à noite e não melhora em nenhuma posição",
+  "Dormência, formigamento ou fraqueza que apareceram agora"
+];
+var HOUXI = {
+  name:"Ponto da lateral da mão", code:"Houxi, ID3",
+  where:"Feche a mão sem apertar. Na lateral, do lado do mindinho, forma-se uma dobra de pele logo abaixo da junta do mindinho. O ponto fica na ponta dessa dobra, encostado no osso."
+};
+var REGIONS = [
+  {id:"ombro", label:"Ombro", hint:"dor ao levantar o braço",
+   move:"Levante o braço dolorido devagar, até onde der, e faça círculos pequenos com o ombro.",
+   flags:["Dor no ombro ou braço esquerdo com aperto no peito, suor frio ou falta de ar","Ombro inchado, quente ou deformado","Não consegue levantar o braço de jeito nenhum depois de uma queda"],
+   points:[
+    {name:"Ponto do meio da canela", code:"Tiaokou, E38", where:"Na frente da perna, na metade do caminho entre o joelho e o tornozelo, um dedo de largura para fora da borda da canela.", note:"É o ponto distante mais usado na tradição para ombro travado."},
+    {name:"Ponto entre anelar e mindinho", code:"Zhongzhu, TA3", where:"No dorso da mão, na valeta entre os ossos do dedo anelar e do mindinho, logo atrás das juntas dos dedos."},
+    {name:"Ponto abaixo do joelho, por fora", code:"Yanglingquan, VB34", where:"Na face de fora da perna, logo abaixo do joelho. Ache o ossinho redondo e saliente (cabeça da fíbula). O ponto fica na pequena cova logo à frente e abaixo dele."}
+   ]},
+  {id:"joelho", label:"Joelho", hint:"dor ao andar, subir escada",
+   move:"Sentado, dobre e estique o joelho dolorido devagar.",
+   flags:["Joelho inchado, quente ou vermelho","Joelho que trava ou falseia e faz você quase cair","Não consegue apoiar o peso na perna"],
+   points:[
+    {name:"Ponto da ponta da dobra do cotovelo", code:"Quchi, IG11", where:"Dobre o cotovelo. O ponto fica na ponta de fora da dobra, onde a prega da pele termina.", note:"Na acupuntura distal, o cotovelo corresponde ao joelho."},
+    {name:"Ponto ao lado do tendão do cotovelo", code:"Chize, P5", where:"Com o cotovelo levemente dobrado, sinta o tendão duro no meio da dobra (bíceps). O ponto fica na própria dobra, encostado nesse tendão, do lado do polegar."},
+    {name:"Ponto do centro do ombro", code:"Jianzhong, escola Tung", where:"No centro do músculo arredondado do ombro (deltoide), de três a quatro dedos de largura abaixo da ponta do ombro."}
+   ]},
+  {id:"lombar", label:"Lombar", hint:"dor na parte baixa das costas",
+   move:"Em pé, incline o tronco devagar para a frente e para os lados, ou caminhe pela casa.",
+   flags:["Perda de controle da urina ou das fezes","Dormência entre as pernas, na região que encosta no selim","Fraqueza em uma ou nas duas pernas","Dor que desce abaixo do joelho com formigamento forte"],
+   points:[
+    {name:"Pontos da lombar na mão (são dois)", code:"Yaotongdian", where:"No dorso da mão. Um fica na valeta entre os ossos do indicador e do dedo médio. O outro, na valeta entre os ossos do anelar e do mindinho. Deslize o dedo pela valeta em direção ao punho até ela fechar, onde os ossos se encontram.", note:"Pressione um e depois o outro, metade do tempo em cada."},
+    HOUXI,
+    {name:"Ponto atrás do tornozelo", code:"Kunlun, B60", where:"Atrás do tornozelo, do lado de fora, na cova entre o osso saliente do tornozelo e o tendão de Aquiles.", note:"Este ponto não deve ser usado na gravidez."}
+   ]},
+  {id:"pernas", label:"Pernas", hint:"dor ou peso nas panturrilhas",
+   move:"Sentado, mexa os pés para cima e para baixo, como quem pisa em um pedal.",
+   flags:["Uma perna só inchada, quente ou avermelhada","Dor na panturrilha que aparece ao caminhar e some ao parar","Ferida na perna ou no pé que não cicatriza","Pé frio, pálido ou arroxeado"],
+   points:[
+    {name:"Ponto do músculo do antebraço", code:"Shousanli, IG10", where:"Dobre o cotovelo e ache a ponta de fora da dobra. O ponto fica três dedos de largura abaixo dela, em direção ao polegar, sobre um músculo que costuma ser bem sensível.", note:"Na acupuntura distal, o antebraço corresponde à perna."},
+    {name:"Ponto de fora do punho", code:"Waiguan, TA5", where:"No dorso do antebraço, três dedos de largura acima da dobra do punho, bem no meio, entre os dois ossos."},
+    {name:"Ponto de dentro do punho", code:"Neiguan, PC6", where:"Na parte de dentro do antebraço, três dedos de largura acima da dobra do punho, no meio, entre os dois tendões."}
+   ]},
+  {id:"pescoco", label:"Pescoço", hint:"rigidez, dor ao virar a cabeça",
+   move:"Vire a cabeça devagar para um lado e para o outro, sem forçar.",
+   flags:["Dor de cabeça muito forte que começou de repente","Tontura, visão dupla ou dificuldade para falar","Fraqueza ou dormência nos braços ou nas mãos"],
+   points:[
+    {name:"Ponto do torcicolo", code:"Luozhen", where:"No dorso da mão, na valeta entre os ossos do dedo indicador e do dedo médio, um dedo de largura atrás das juntas dos dedos."},
+    HOUXI,
+    {name:"Ponto acima do tornozelo, por fora", code:"Xuanzhong, VB39", where:"Na face de fora da perna, quatro dedos de largura acima do osso saliente do tornozelo, na borda da frente do osso fino da perna."}
+   ]}
+];
+
+var KEY = "pontos-alivio-diario";
+var state = {region:null, before:null, after:null, idx:0, left:90, tick:null};
+var $ = function(id){return document.getElementById(id)};
+
+function loadDiary(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return []}}
+function saveDiary(d){try{localStorage.setItem(KEY,JSON.stringify(d));return true}catch(e){return false}}
+
+function show(view){
+  ["home","triage","stop","before","session","after","result"].forEach(function(v){$("v-"+v).hidden = v!==view});
+  stopTimer();
+  if(view==="home") renderDiary();
+  window.scrollTo(0,0);
+}
+
+function renderRegions(){
+  var box=$("regions");
+  REGIONS.forEach(function(r){
+    var b=document.createElement("button");
+    b.className="region";
+    b.innerHTML="<strong></strong><span></span>";
+    b.firstChild.textContent=r.label; b.lastChild.textContent=r.hint;
+    b.addEventListener("click",function(){startRegion(r)});
+    box.appendChild(b);
+  });
+}
+
+function startRegion(r){
+  state.region=r; state.before=null; state.after=null; state.idx=0;
+  $("triage-region").textContent=r.label;
+  var ul=$("triage-list"); ul.innerHTML="";
+  r.flags.concat(GENERAL_FLAGS).forEach(function(f){var li=document.createElement("li");li.textContent=f;ul.appendChild(li)});
+  show("triage");
+}
+
+function buildScale(id, onPick){
+  var box=$(id); box.innerHTML="";
+  for(var i=0;i<=10;i++){(function(n){
+    var b=document.createElement("button");
+    b.textContent=n; b.setAttribute("aria-pressed","false"); b.setAttribute("aria-label","Dor "+n+" de 10");
+    b.addEventListener("click",function(){
+      Array.prototype.forEach.call(box.children,function(c){c.setAttribute("aria-pressed","false")});
+      b.setAttribute("aria-pressed","true"); onPick(n);
+    });
+    box.appendChild(b);
+  })(i)}
+}
+
+function fmt(s){return Math.floor(s/60)+":"+("0"+(s%60)).slice(-2)}
+function stopTimer(){if(state.tick){clearInterval(state.tick);state.tick=null}}
+function resetTimer(){stopTimer();state.left=90;$("timer").textContent=fmt(90);$("timer-btn").textContent="Começar 1 min e meio"}
+function toggleTimer(){
+  if(state.tick){stopTimer();$("timer-btn").textContent="Continuar";return}
+  if(state.left<=0) state.left=90;
+  $("timer-btn").textContent="Pausar";
+  state.tick=setInterval(function(){
+    state.left--; $("timer").textContent=fmt(Math.max(state.left,0));
+    if(state.left<=0){stopTimer();$("timer-btn").textContent="Repetir";$("timer").textContent="Pronto"}
+  },1000);
+}
+
+function renderPoint(){
+  var r=state.region, p=r.points[state.idx], n=r.points.length;
+  var st=$("steps"); st.innerHTML="";
+  for(var i=0;i<n;i++){var el=document.createElement("i");if(i<=state.idx)el.className="on";st.appendChild(el)}
+  $("point-count").textContent=r.label+" · ponto "+(state.idx+1)+" de "+n;
+  $("point-name").textContent=p.name;
+  $("point-code").textContent="Nome na acupuntura: "+p.code;
+  $("point-where").textContent=p.where;
+  $("point-move").textContent=r.move;
+  $("point-note").hidden=!p.note; $("point-note").textContent=p.note||"";
+  $("point-prev").hidden=state.idx===0;
+  $("point-next").textContent=state.idx===n-1?"Terminei os pontos":"Próximo ponto";
+  resetTimer(); window.scrollTo(0,0);
+}
+
+function renderDiary(){
+  var d=loadDiary(), sum=$("diary-summary"), tb=$("diary-table"), body=tb.querySelector("tbody");
+  body.innerHTML="";
+  tb.hidden=!d.length; $("diary-clear").hidden=!d.length;
+  if(!d.length){sum.textContent="Ainda não há sessões. Depois da primeira, a dor de antes e de depois aparece aqui.";return}
+  var better=d.filter(function(e){return e.depois<e.antes}).length;
+  sum.textContent=d.length+(d.length===1?" sessão registrada. ":" sessões registradas. ")+"A dor diminuiu em "+better+" de "+d.length+".";
+  d.slice(-12).reverse().forEach(function(e){
+    var tr=document.createElement("tr"), diff=e.depois-e.antes;
+    var cls=diff<0?"down":diff>0?"up":"same";
+    var txt=diff<0?"caiu "+(-diff):diff>0?"subiu "+diff:"igual";
+    [e.dia,e.regiao,e.antes,e.depois].forEach(function(v){var td=document.createElement("td");td.textContent=v;tr.appendChild(td)});
+    var td=document.createElement("td");td.textContent=txt;td.className=cls;tr.appendChild(td);
+    body.appendChild(tr);
+  });
+}
+
+function finish(){
+  var a=state.before,b=state.after,d=loadDiary();
+  var dia=new Date().toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"});
+  d.push({dia:dia,regiao:state.region.label,antes:a,depois:b});
+  var ok=saveDiary(d);
+  if(b<a){$("result-title").textContent="A dor caiu de "+a+" para "+b;$("result-text").textContent="Anote mentalmente qual ponto e qual lado deram mais resultado. É por eles que vale começar na próxima vez."}
+  else if(b===a){$("result-title").textContent="Desta vez a dor ficou em "+a;$("result-text").textContent="Acontece. Na próxima sessão, experimente o outro lado do corpo ou outro horário do dia."}
+  else{$("result-title").textContent="A dor subiu de "+a+" para "+b;$("result-text").textContent="Não repita hoje. Se a dor continuar mais forte nas próximas horas, ou se isso se repetir, fale com um profissional de saúde."}
+  if(!ok)$("result-text").textContent+=" (Não foi possível guardar no diário neste navegador.)";
+  show("result");
+}
+
+document.addEventListener("click",function(e){var t=e.target.closest("[data-go]");if(t)show(t.getAttribute("data-go"))});
+$("triage-yes").addEventListener("click",function(){show("stop")});
+$("triage-no").addEventListener("click",function(){
+  $("before-region").textContent=state.region.label;
+  $("before-next").disabled=true;
+  buildScale("scale-before",function(n){state.before=n;$("before-next").disabled=false});
+  show("before");
+});
+$("before-next").addEventListener("click",function(){show("session");renderPoint()});
+$("timer-btn").addEventListener("click",toggleTimer);
+$("point-prev").addEventListener("click",function(){if(state.idx>0){state.idx--;renderPoint()}});
+$("point-next").addEventListener("click",function(){
+  if(state.idx<state.region.points.length-1){state.idx++;renderPoint();return}
+  $("after-save").disabled=true;
+  buildScale("scale-after",function(n){state.after=n;$("after-save").disabled=false});
+  show("after");
+});
+$("after-save").addEventListener("click",finish);
+var clearArmed=false;
+$("diary-clear").addEventListener("click",function(){
+  if(!clearArmed){clearArmed=true;this.textContent="Toque de novo para confirmar que quer apagar";return}
+  clearArmed=false;this.textContent="Apagar o diário";
+  try{localStorage.removeItem(KEY)}catch(e){}
+  renderDiary();
+});
+
+renderRegions();
+renderDiary();
+</script>
+</body>
+</html>
